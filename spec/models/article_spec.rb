@@ -29,5 +29,15 @@ describe '#validations' do
       invalid_article = build :article, slug: article.slug
       expect(invalid_article).not_to be_valid
     end
+
+    describe '.recent' do
+      it 'should return list of recent articles' do
+        older_article = create :article
+        newer_article = create :article
+        expect(described_class.recent).to eq([newer_article, older_article])
+        older_article.update_column :created_at, Time.now
+        expect(described_class.recent).to eq([older_article, newer_article])
+      end
+    end
   end
 end
